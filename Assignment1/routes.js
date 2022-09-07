@@ -1,5 +1,31 @@
 const requestHandeler = (req, res) => {
-    const url = req.url
+    const url = req.url;
+    const method = req.method;
+
+    if (url === '/'){
+        res.write('<html>');
+        res.write('<head><title>Username</title></head>');
+        res.write('<body>');
+        res.write('<h1>User name</h1>');
+        res.write('<form action="/create-user" method="POST"><input type="text" name="username"><button type="submit">Submit</button></form>');
+        res.write('</body>');
+        res.write('</html>');
+        return res.end();
+    };
+
+    if (url === '/create-user' && method === 'POST'){
+        const body = [];
+        req.on('data', (chunk) => {
+            body.push(chunk);
+        });
+
+        return req.on('end', () => {
+            const parseBody = Buffer.concat(body).toString();
+            const username = parseBody.split('=')[1];
+            console.log(username);
+            return res.end();
+        });
+    };
 
     if (url === '/users'){
         res.write('<html>');
